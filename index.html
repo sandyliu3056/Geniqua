@@ -283,6 +283,23 @@ h2.sec{font-size:clamp(27px,3.2vw,38px);max-width:20ch}
 .trackLinks a span{font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--muted);
   letter-spacing:.08em;text-transform:uppercase}
 
+/* 承運人偏好。選中才出現品牌色，其餘狀態一律走站內色票——
+   品牌色只在實際指名該承運人時使用。 */
+.carrierPick{display:flex;gap:10px;flex-wrap:wrap}
+.carrierPick button{flex:1 1 auto;min-width:98px;border:1px solid var(--line);background:var(--paper);
+  color:var(--muted);font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.03em;
+  padding:11px 14px;min-height:46px;border-radius:2px;cursor:pointer;
+  transition:background .16s,border-color .16s,color .16s}
+.carrierPick button:hover{border-color:var(--orange);color:var(--ink)}
+.carrierPick button.on{color:#fff}
+.carrierPick button.c-ups.on{background:var(--ups);border-color:var(--ups);
+  box-shadow:inset 0 -3px 0 var(--ups-gold)}
+.carrierPick button.c-fedex.on{background:var(--fedex);border-color:var(--fedex);
+  box-shadow:inset 0 -3px 0 var(--fedex-orange)}
+.carrierPick button.c-usps.on{background:var(--usps);border-color:var(--usps);
+  box-shadow:inset 0 -3px 0 var(--usps-red)}
+.carrierPick button.c-any.on{background:var(--ink);border-color:var(--ink)}
+
 /* ---------- FAQ ---------- */
 details.faq{border-bottom:1px solid var(--line)}
 details.faq summary{list-style:none;cursor:pointer;padding:20px 44px 20px 0;font-family:var(--display);
@@ -1406,6 +1423,15 @@ h1.sec{font-size:clamp(27px,3.2vw,38px);max-width:20ch}
             <option value="Not sure yet" data-i18n="q.s5">Not sure yet</option>
           </select>
         </label>
+        <div class="fld">
+          <span data-i18n="q.carriers">Preferred carriers</span>
+          <div class="carrierPick" id="qCar">
+            <button type="button" class="c-ups" data-c="UPS">UPS</button>
+            <button type="button" class="c-fedex" data-c="FedEx">FedEx</button>
+            <button type="button" class="c-usps" data-c="USPS">USPS</button>
+            <button type="button" class="c-any on" data-any="1" data-i18n="q.anyCarrier">No preference</button>
+          </div>
+        </div>
         <div class="row2">
           <label class="fld"><span data-i18n="q.from">Origin</span><input id="qFrom" type="text" placeholder="Ningbo, CN"></label>
           <label class="fld"><span data-i18n="q.to">Destination</span><input id="qTo" type="text" placeholder="Diamond Bar, CA"></label>
@@ -1657,6 +1683,7 @@ en:{
  "q.name":"Contact name","q.company":"Company","q.email":"Email","q.phone":"Telephone",
  "q.service":"Service required","q.s1":"Ocean freight","q.s2":"Warehousing and distribution",
  "q.s3":"E-commerce order fulfillment","q.s4":"Customs brokerage","q.s5":"Undecided",
+ "q.carriers":"Preferred carriers","q.anyCarrier":"No preference",
  "q.from":"Origin","q.to":"Destination","q.vol":"Monthly volume","q.start":"Required start date",
  "q.notes":"Additional requirements","q.send":"Open in mail application","q.copy":"Copy text",
  "q.copied":"Copied","q.preview":"Prepared message","q.contactH":"Direct contact","q.blank":"Not specified",
@@ -1788,6 +1815,7 @@ zh:{
  "q.name":"聯絡人","q.company":"公司名稱","q.email":"電子郵件","q.phone":"聯絡電話",
  "q.service":"所需服務","q.s1":"海運承攬","q.s2":"倉儲與配送",
  "q.s3":"電商訂單代發貨","q.s4":"報關服務","q.s5":"尚未確定",
+ "q.carriers":"指定承運人","q.anyCarrier":"無特別指定",
  "q.from":"起運地","q.to":"目的地","q.vol":"每月數量","q.start":"預計開始日期",
  "q.notes":"其他需求說明","q.send":"以郵件程式開啟","q.copy":"複製內容",
  "q.copied":"已複製","q.preview":"郵件內容","q.contactH":"直接聯繫","q.blank":"未填寫",
@@ -2312,6 +2340,27 @@ $("trkIn").addEventListener("input", calcTrk);
 /* =====================================================================
    8. 詢價信
    ===================================================================== */
+/* 多選：挑了任一家就取消「無特別指定」；反之亦然。 */
+function carriersPicked(){
+  var box = $("qCar"); if(!box) return [];
+  return Array.prototype.slice.call(box.querySelectorAll('button.on:not([data-any])'))
+    .map(function(b){ return b.getAttribute("data-c"); });
+}
+(function wireCarriers(){
+  var box = $("qCar"); if(!box) return;
+  box.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if(!b || !box.contains(b)) return;
+    if(b.hasAttribute("data-any")){
+      Array.prototype.forEach.call(box.children, function(x){ x.classList.remove("on"); });
+      b.classList.add("on");
+    } else {
+      b.classList.toggle("on");
+      box.querySelector("[data-any]").classList.toggle("on", carriersPicked().length === 0);
+    }
+    buildQuote();
+  });
+})();
 function buildQuote(){
   var pre = $("quoteOut"); if(!pre) return;
   function g(id){ var v = ($(id).value || "").trim(); return v || T("q.blank"); }
@@ -2323,6 +2372,7 @@ function buildQuote(){
     T("q.phone")   + ": " + g("qPhone"),
     "",
     T("q.service") + " " + svc,
+    T("q.carriers") + ": " + (carriersPicked().join(", ") || T("q.anyCarrier")),
     T("q.from")    + ": " + g("qFrom"),
     T("q.to")      + ": " + g("qTo"),
     T("q.vol")     + ": " + g("qVol"),
