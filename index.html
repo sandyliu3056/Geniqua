@@ -300,6 +300,23 @@ h2.sec{font-size:clamp(27px,3.2vw,38px);max-width:20ch}
   box-shadow:inset 0 -3px 0 var(--usps-red)}
 .carrierPick button.c-any.on{background:var(--ink);border-color:var(--ink)}
 
+/* 承運人切換列。單選；只有「計費重量」與「附加費檢核」會用到，
+   其餘分頁自動收起，避免誤以為棧板試算也依承運人而異。 */
+#calCarWrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 22px}
+#calCarWrap.off{display:none}
+.carLabel{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted)}
+.carrierBar{display:flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.carrierBar button{border:0;border-left:1px solid var(--line);background:var(--paper);color:var(--muted);
+  font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.03em;padding:11px 22px;
+  min-height:44px;cursor:pointer;transition:background .16s,color .16s}
+.carrierBar button:first-child{border-left:0}
+.carrierBar button:hover{color:var(--ink)}
+.carrierBar button.on{color:#fff}
+.carrierBar button.c-ups.on{background:var(--ups);box-shadow:inset 0 -3px 0 var(--ups-gold)}
+.carrierBar button.c-fedex.on{background:var(--fedex);box-shadow:inset 0 -3px 0 var(--fedex-orange)}
+.carrierBar button.c-usps.on{background:var(--usps);box-shadow:inset 0 -3px 0 var(--usps-red)}
+
 /* ---------- FAQ ---------- */
 details.faq{border-bottom:1px solid var(--line)}
 details.faq summary{list-style:none;cursor:pointer;padding:20px 44px 20px 0;font-family:var(--display);
@@ -576,7 +593,7 @@ footer .wrap > div{flex:1 1 220px}
   </div></div>
   <div id="barNav"><div class="wrap barNavIn">
     <button id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span></button>
-    <nav id="nav"><a href="#/home" data-route="home" data-i18n="nav.home">Home</a><a href="#/mission" data-route="mission" data-i18n="nav.mission">Our Mission</a><div class="navDrop"><a href="#/services" data-route="services" data-i18n="nav.services">Services</a><div class="navMenu"><a href="#/ocean" data-route="ocean" data-i18n="nav.ocean">Ocean Freight</a><a href="#/inland" data-route="inland" data-i18n="nav.inland">Inland Transportation</a><a href="#/warehouse" data-route="warehouse" data-i18n="nav.warehouse">Warehousing &amp; Distribution</a><a href="#/ecommerce" data-route="ecommerce" data-i18n="nav.ecommerce">E-Commerce Order Fulfillment</a><a href="#/brokerage" data-route="brokerage" data-i18n="nav.brokerage">Customs Brokerage</a></div></div><a href="#/calculators" data-route="calculators" data-i18n="nav.calculators">Calculators</a><a href="#/promotions" data-route="promotions" data-i18n="nav.promotions">Promotions</a><a href="#/contact" data-route="contact" data-i18n="nav.contact">Contact Us</a></nav>
+    <nav id="nav"><a href="#/home" data-route="home" data-i18n="nav.home">Home</a><a href="#/mission" data-route="mission" data-i18n="nav.mission">Our Mission</a><div class="navDrop"><a href="#/services" data-route="services" data-i18n="nav.services">Services</a><div class="navMenu"><a href="#/ocean" data-route="ocean" data-i18n="nav.ocean">Ocean Freight</a><a href="#/inland" data-route="inland" data-i18n="nav.inland">Inland Transportation</a><a href="#/warehouse" data-route="warehouse" data-i18n="nav.warehouse">Warehousing &amp; Distribution</a><a href="#/ecommerce" data-route="ecommerce" data-i18n="nav.ecommerce">E-Commerce Order Fulfillment</a><a href="#/brokerage" data-route="brokerage" data-i18n="nav.brokerage">Customs Brokerage</a></div></div><div class="navDrop"><a href="#/calculators" data-route="calculators" data-i18n="nav.calculators">Calculators</a><div class="navMenu"><a href="#/calculators" data-route="calculators" data-i18n="nav.parcelcalc">Parcel calculators</a><a href="#/oceanvolume" data-route="oceanvolume" data-i18n="nav.oceanvol">Ocean volume</a></div></div><a href="#/promotions" data-route="promotions" data-i18n="nav.promotions">Promotions</a><a href="#/contact" data-route="contact" data-i18n="nav.contact">Contact Us</a></nav>
     <button id="langbtn" type="button">中文</button>
   </div></div>
 </header><main id="app"><article class="page" id="pg-home">
@@ -1465,9 +1482,16 @@ footer .wrap > div{flex:1 1 220px}
   <path d="M60 94V70a60 60 0 0 1 120 0v24" fill="none"/>
   <circle cx="120" cy="70" r="42" fill="#3C3A40"/>
   <path d="M120 70V42" stroke="#E0531F" stroke-width="4" stroke-linecap="round"/>
-  <path d="M120 70l22 16" stroke="#E0531F" stroke-width="4" stroke-linecap="round"/></g><rect width="1400" height="400" fill="url(#cl-v)"/></svg><div class="pageHeadIn"><div class="wrap" id="head-calculators"><p class="eyebrow light kicker"></p><h1></h1><p class="pageLead"></p></div></div></header><section class="band"><div class="wrap"><div id="toolTabs" role="tablist">
+  <path d="M120 70l22 16" stroke="#E0531F" stroke-width="4" stroke-linecap="round"/></g><rect width="1400" height="400" fill="url(#cl-v)"/></svg><div class="pageHeadIn"><div class="wrap" id="head-calculators"><p class="eyebrow light kicker"></p><h1></h1><p class="pageLead"></p></div></div></header><section class="band"><div class="wrap"><div id="toolBox"><div id="calCarWrap">
+      <span class="carLabel" data-i18n="tool.carrier">Carrier</span>
+      <div class="carrierBar" id="calCar" role="tablist">
+        <button type="button" class="c-ups on" data-k="ups">UPS</button>
+        <button type="button" class="c-fedex" data-k="fedex">FedEx</button>
+        <button type="button" class="c-usps" data-k="usps">USPS</button>
+      </div>
+    </div>
+    <div id="toolTabs" role="tablist">
       <button role="tab" data-panel="p-dim" class="on"><span data-i18n="tool.t1">Billable weight</span><small>DIM</small></button>
-      <button role="tab" data-panel="p-cbm"><span data-i18n="tool.t2">Ocean volume</span><small>CBM</small></button>
       <button role="tab" data-panel="p-sur"><span data-i18n="tool.t3">Surcharge check</span><small>AHS / LPS</small></button>
       <button role="tab" data-panel="p-pal"><span data-i18n="tool.t4">Pallet planner</span><small>48 &times; 40 in</small></button>
       <button role="tab" data-panel="p-trk"><span data-i18n="tool.t5">Track a shipment</span><small>ISO 6346</small></button>
@@ -1504,22 +1528,6 @@ footer .wrap > div{flex:1 1 220px}
         <div class="out">
           <h4 data-i18n="dim.outH">Result</h4>
           <div id="dimOut"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ---- 海運 CBM ---- -->
-    <div class="panel" id="p-cbm">
-      <div class="toolGrid">
-        <div class="card">
-          <h3 data-i18n="cbm.h">How much of a container is this?</h3>
-          <p data-i18n="cbm.p">Add a line per carton type. Ocean LCL is billed on whichever is greater: cubic metres, or metric tonnes.</p>
-          <div id="cbmRows" style="margin-top:16px"></div>
-          <button class="btn" id="cbmAdd" type="button" style="width:100%"><span data-i18n="cbm.add">Add another carton type</span></button>
-        </div>
-        <div class="out">
-          <h4 data-i18n="cbm.outH">Result</h4>
-          <div id="cbmOut"></div>
         </div>
       </div>
     </div>
@@ -1588,7 +1596,69 @@ footer .wrap > div{flex:1 1 220px}
           <div id="trkOut"></div>
         </div>
       </div>
-    </div></div></section></article><article class="page" id="pg-promotions"><header class="pageHead"><svg class="scene sceneBand" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Current rate programmes"><defs><linearGradient id="pr-v" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#160E14" stop-opacity=".80"/><stop offset=".42" stop-color="#160E14" stop-opacity=".52"/><stop offset=".78" stop-color="#160E14" stop-opacity=".14"/><stop offset="1" stop-color="#160E14" stop-opacity=".06"/></linearGradient>
+    </div></div></div></section></article><article class="page" id="pg-oceanvolume"><header class="pageHead"><svg class="scene sceneBand" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Container stowage and cubic measurement"><defs><linearGradient id="ov-v" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#160E14" stop-opacity=".80"/><stop offset=".42" stop-color="#160E14" stop-opacity=".52"/><stop offset=".78" stop-color="#160E14" stop-opacity=".14"/><stop offset="1" stop-color="#160E14" stop-opacity=".06"/></linearGradient>
+<linearGradient id="ov-s" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#20415F"/><stop offset=".5" stop-color="#3E6E93"/>
+  <stop offset="1" stop-color="#7FA3BE"/></linearGradient>
+<linearGradient id="ov-c" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#3F6E86"/><stop offset="1" stop-color="#264A5E"/></linearGradient>
+<linearGradient id="ov-b" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#E2BA82"/><stop offset="1" stop-color="#BE8C4E"/></linearGradient></defs>
+<rect width="1400" height="400" fill="url(#ov-s)"/>
+<g fill="#FFFFFF" opacity=".07">
+  <path d="M0 340h1400v4H0zM0 300h1400v2H0zM0 260h1400v2H0zM0 220h1400v2H0z"/>
+  <path d="M120 0v400h3V0zM360 0v400h3V0zM600 0v400h3V0zM840 0v400h3V0zM1080 0v400h3V0zM1320 0v400h3V0z"/></g>
+<g fill="#16324A" opacity=".8">
+  <path d="M60 210h12v150H60zM148 210h12v150h-12zM40 190h140v20H40z"/>
+  <path d="M0 176h250v16H0z"/><path d="M186 190h34v40h-34z"/>
+  <path d="M1240 210h12v150h-12zM1328 210h12v150h-12zM1220 190h140v20h-140z"/>
+  <path d="M1150 176h250v16h-250z"/></g>
+<g transform="translate(430,84)">
+  <path d="M0 40h540v200H0z" fill="url(#ov-c)" stroke="#12293C" stroke-width="4"/>
+  <path d="M0 40l38-32h540L540 40z" fill="#4E8098" stroke="#12293C" stroke-width="4"/>
+  <path d="M540 40l38-32v200l-38 32z" fill="#1D3C52" stroke="#12293C" stroke-width="4"/>
+  <g stroke="#12293C" stroke-width="1.6" opacity=".45">
+    <path d="M24 40v200M48 40v200M72 40v200M96 40v200M120 40v200M144 40v200M168 40v200M192 40v200M216 40v200M240 40v200M264 40v200M288 40v200M312 40v200M336 40v200M360 40v200M384 40v200M408 40v200M432 40v200M456 40v200M480 40v200M504 40v200M528 40v200"/></g>
+  <g fill="url(#ov-b)" stroke="#8A6335" stroke-width="2">
+    <rect x="26" y="150" width="76" height="56"/><rect x="110" y="150" width="76" height="56"/>
+    <rect x="194" y="150" width="76" height="56"/><rect x="278" y="150" width="76" height="56"/>
+    <rect x="362" y="150" width="76" height="56"/><rect x="446" y="150" width="70" height="56"/>
+    <rect x="26" y="88" width="76" height="56"/><rect x="110" y="88" width="76" height="56"/>
+    <rect x="194" y="88" width="76" height="56"/><rect x="278" y="88" width="76" height="56"/>
+    <rect x="362" y="88" width="76" height="56"/></g>
+  <g fill="#F6EDDF" opacity=".9">
+    <rect x="40" y="166" width="26" height="16"/><rect x="124" y="166" width="26" height="16"/>
+    <rect x="208" y="166" width="26" height="16"/><rect x="292" y="166" width="26" height="16"/>
+    <rect x="376" y="166" width="26" height="16"/><rect x="40" y="104" width="26" height="16"/>
+    <rect x="124" y="104" width="26" height="16"/><rect x="208" y="104" width="26" height="16"/></g>
+  <g stroke="#E0531F" stroke-width="3.4" fill="none" stroke-linecap="round">
+    <path d="M0 268h540M0 258v20M540 258v20"/>
+    <path d="M-40 40v200M-50 40h20M-50 240h20"/>
+    <path d="M556 20l38-32M550 12l12 14M588 -22l12 14"/></g>
+  <text x="270" y="292" text-anchor="middle" fill="#FFD9C4" font-family="Archivo,sans-serif"
+        font-size="19" font-weight="700" letter-spacing="1.4">40&#8242; LENGTH</text>
+  <text x="-66" y="146" text-anchor="middle" fill="#FFD9C4" font-family="Archivo,sans-serif"
+        font-size="19" font-weight="700" letter-spacing="1.4">HT</text>
+  <text x="596" y="6" text-anchor="middle" fill="#FFD9C4" font-family="Archivo,sans-serif"
+        font-size="19" font-weight="700" letter-spacing="1.4">W</text></g>
+<rect y="360" width="1400" height="40" fill="#12293C"/>
+<g stroke="#2C5570" stroke-width="2" opacity=".7"><path d="M0 372h1400M0 386h1400"/></g><rect width="1400" height="400" fill="url(#ov-v)"/></svg><div class="pageHeadIn"><div class="wrap" id="head-oceanvolume"><p class="eyebrow light kicker"></p><h1></h1><p class="pageLead"></p></div></div></header><section class="band"><div class="wrap"><!-- ---- 海運 CBM ---- -->
+    <div class="panel on" id="p-cbm">
+      <div class="toolGrid">
+        <div class="card">
+          <h3 data-i18n="cbm.h">How much of a container is this?</h3>
+          <p data-i18n="cbm.p">Add a line per carton type. Ocean LCL is billed on whichever is greater: cubic metres, or metric tonnes.</p>
+          <div id="cbmRows" style="margin-top:16px"></div>
+          <button class="btn" id="cbmAdd" type="button" style="width:100%"><span data-i18n="cbm.add">Add another carton type</span></button>
+        </div>
+        <div class="out">
+          <h4 data-i18n="cbm.outH">Result</h4>
+          <div id="cbmOut"></div>
+        </div>
+      </div>
+    </div>
+
+    </div></section></article><article class="page" id="pg-promotions"><header class="pageHead"><svg class="scene sceneBand" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Current rate programmes"><defs><linearGradient id="pr-v" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#160E14" stop-opacity=".80"/><stop offset=".42" stop-color="#160E14" stop-opacity=".52"/><stop offset=".78" stop-color="#160E14" stop-opacity=".14"/><stop offset="1" stop-color="#160E14" stop-opacity=".06"/></linearGradient>
 <linearGradient id="pr-s" x1="0" y1="0" x2="1" y2="1">
   <stop offset="0" stop-color="#B03D12"/><stop offset=".55" stop-color="#E0531F"/>
   <stop offset="1" stop-color="#EE8443"/></linearGradient></defs>
@@ -1745,22 +1815,52 @@ footer .wrap > div{flex:1 1 220px}
       承運人門檻幾乎每年調整，改版時只要動這一段。
    ===================================================================== */
 var RULES = {
-  /* 材積重除數（依合約，不是我們定的） */
-  divisors: { imp:[139,166], met:[5000,6000] },
+  /* 三家承運人各一組規則。門檻與除數幾乎每年調整，改版只要動這一段，
+     下面的函式不含任何寫死的數字。 */
+  carriers:["ups","fedex","usps"],
+  carrierName:{ ups:"UPS", fedex:"FedEx", usps:"USPS" },
 
-  /* 美國國內陸運附加費門檻（英吋 / 磅） */
-  parcel:{
-    ahWeightLb   : 50,     /* 超過就是 Additional Handling – Weight */
-    ahLongestIn  : 48,     /* 最長邊 */
-    ahSecondIn   : 30,     /* 次長邊 */
-    ahLenGirthIn : 105,    /* 長 + 圍長 */
-    lpLenGirthIn : 130,    /* Large Package */
-    lpLongestIn  : 96,
-    omWeightLb   : 150,    /* Over Maximum Limits */
-    omLongestIn  : 108,
-    omLenGirthIn : 165,
-    floorAhDimLb : 40,     /* 最低計費重只套在 AH–Dimension */
-    floorLpLb    : 90
+  carrier:{
+    ups:{
+      divisors:{ imp:[139,166], met:[5000,6000] },
+      dimMinVolumeIn3:0,        /* 0 表示一律採計材積重 */
+      dimZoneNote:false,
+      maxWeightLb:150,
+      checks:[
+        { code:"AH-W", key:"ahw", limits:{ weight:50 } },
+        { code:"AH-D", key:"ahd", limits:{ longest:48, second:30, lenGirth:105 },
+          floorLb:40, floorMsg:"sur.floorAh" },
+        { code:"LPS",  key:"lp",  limits:{ lenGirth:130, longest:96 },
+          floorLb:90, floorMsg:"sur.floorLp" },
+        { code:"MAX",  key:"om",  limits:{ weight:150, longest:108, lenGirth:165 } }
+      ]
+    },
+    fedex:{
+      divisors:{ imp:[139,166], met:[5000,6000] },
+      dimMinVolumeIn3:0,
+      dimZoneNote:false,
+      maxWeightLb:150,
+      checks:[
+        { code:"AH-W", key:"ahw",  limits:{ weight:50 } },
+        { code:"AH-D", key:"ahd",  limits:{ longest:48, second:30, lenGirth:105 } },
+        { code:"OVR",  key:"ovr",  limits:{ lenGirth:130, longest:96 },
+          floorLb:90, floorMsg:"sur.floorOvr" },
+        { code:"UNA",  key:"unau", limits:{ weight:150, longest:108, lenGirth:165 } }
+      ]
+    },
+    usps:{
+      /* 材積重僅在超過一立方英尺且為第 5 區以上時採計。 */
+      divisors:{ imp:[166,139], met:[6000,5000] },
+      dimMinVolumeIn3:1728,
+      dimZoneNote:true,
+      maxWeightLb:70,
+      checks:[
+        { code:"NS22", key:"ns22", limits:{ longest:22 } },
+        { code:"NS30", key:"ns30", limits:{ longest:30 } },
+        { code:"CUBE", key:"cube", limits:{ volume:3456 } },
+        { code:"MAX",  key:"umax", limits:{ weight:70, lenGirth:130 } }
+      ]
+    }
   },
 
   /* 貨櫃：nominal 是箱內容積，usable 是實務裝載量 */
@@ -1770,12 +1870,10 @@ var RULES = {
     { id:"40' HQ", nominal:76.4, usable:68, payloadKg:26500 },
     { id:"45' HQ", nominal:86.1, usable:78, payloadKg:27600 }
   ],
-  lclCeilingCbm: 15,       /* 到這個材積以上就該比 FCL 了 */
+  lclCeilingCbm: 15,
 
-  /* 棧板 */
   pallet:{ lenIn:48, widIn:40, deckIn:5.5, tareLb:40, maxNetLb:2200 },
 
-  /* 倉庫營業時間（各地當地時間，週一到週五） */
   hours:{ open:8, close:17 },
   sites:[
     { k:"ca", tz:"America/Los_Angeles" },
@@ -1844,9 +1942,28 @@ en:{
  "net.clockNote":"Times are derived from the device clock and reflect daylight saving automatically.",
  "net.you":"Your location","net.open":"Open","net.closed":"Closed",
  "tool.eyebrow":"Planning tools","tool.h2":"Freight calculators",
- "tool.lede":"Five calculations requested most frequently by our customers. All processing takes place in the browser; no data is transmitted.",
+ "tool.lede":"Parcel calculations are carrier specific. Select UPS, FedEx or USPS and the divisor, thresholds and minimum billable weights change accordingly. All processing takes place in the browser; no data is transmitted.",
  "tool.t1":"Billable weight","tool.t2":"Ocean volume","tool.t3":"Accessorial review",
  "tool.t4":"Pallet planning","tool.t5":"Shipment tracking",
+ "tool.carrier":"Carrier",
+ "dim.carrier":"Carrier",
+ "dim.underCube":"USPS applies dimensional weight only above one cubic foot, so scale weight governs here.",
+ "dim.zoneNote":"Dimensional weight also requires zone 5 or higher; confirm the destination zone before relying on this figure.",
+ "dim.overCap":"Above this carrier's maximum accepted weight of {n} lb.",
+ "sur.ovr":"Oversize charge","sur.ovrOk":"Not classified as oversize.",
+ "sur.ovrHit":"Classified as an oversize shipment.",
+ "sur.unau":"Unauthorized shipment","sur.unauOk":"Within the accepted maximum.",
+ "sur.unauHit":"Exceeds the accepted maximum. The shipment may be refused or surcharged.",
+ "sur.ns22":"Nonstandard length \u2014 over 22 in","sur.ns22Ok":"Longest side within 22 in.",
+ "sur.ns22Hit":"Longest side exceeds 22 in.",
+ "sur.ns30":"Nonstandard length \u2014 over 30 in","sur.ns30Ok":"Longest side within 30 in.",
+ "sur.ns30Hit":"Longest side exceeds 30 in.",
+ "sur.cube":"Nonstandard cube \u2014 over 2 cu ft","sur.cubeOk":"Cubic measurement under two cubic feet.",
+ "sur.cubeHit":"Cubic measurement exceeds two cubic feet.",
+ "sur.umax":"Maximum limits","sur.umaxOk":"Within the accepted maximum.",
+ "sur.umaxHit":"Exceeds 70 lb or 130 in length plus girth.",
+ "sur.floorOvr":"The oversize charge carries a minimum billable weight.",
+ "nav.parcelcalc":"Parcel calculators","nav.oceanvol":"Ocean volume",
  "unit.imp":"Inches / pounds","unit.met":"Centimeters / kilograms",
  "f.len":"Length","f.wid":"Width","f.hei":"Height","f.actual":"Scale weight","f.div":"Divisor",
  "f.divCustom":"Enter a value","f.divOwn":"Divisor value","f.actualLb":"Scale weight (lb)",
@@ -1855,7 +1972,7 @@ en:{
  "f.pages":"Site",
  "f.note":"Calculator results are estimates provided for planning purposes. The governing figures are those stated in your contract and on the carrier's rated invoice.",
  "dim.h":"Determining billable weight",
- "dim.p":"Parcel carriers assess charges on the greater of scale weight and dimensional weight.",
+ "dim.p":"Parcel carriers assess charges on the greater of scale weight and dimensional weight. The divisor and the conditions under which it applies differ by carrier.",
  "dim.hint":"The dimensional divisor is defined by your carrier agreement. Confirm the applicable value before relying on this result.",
  "dim.outH":"Result","dim.vol":"Cubic measurement","dim.dimw":"Dimensional weight","dim.scale":"Scale weight",
  "dim.bill":"Billable weight",
@@ -1873,7 +1990,7 @@ en:{
  "cbm.enter":"Add a carton specification to calculate.",
  "cbm.dense":"Weight exceeds volume; this shipment rates on metric tons.",
  "sur.h":"Accessorial exposure",
- "sur.p":"Enter package dimensions in inches and weight in pounds. Values are compared against published United States ground thresholds.",
+ "sur.p":"Enter package dimensions in inches and weight in pounds. Values are compared against the selected carrier\u2019s published United States ground thresholds.",
  "sur.hint":"Thresholds reflect published United States ground values and are revised periodically. Packaging-based handling charges and over-maximum charges depend on measurements recorded at the carrier hub and should be treated as an indication only.",
  "sur.outH":"Threshold review","sur.girth":"Girth","sur.lg":"Length plus girth",
  "sur.longest":"Longest side","sur.second":"Second longest side",
@@ -1979,6 +2096,25 @@ zh:{
  "tool.lede":"以下為客戶詢問頻率最高之五項計算。所有運算於瀏覽器端執行，不傳送任何資料。",
  "tool.t1":"計費重量","tool.t2":"海運材積","tool.t3":"附加費檢核",
  "tool.t4":"棧板規劃","tool.t5":"貨況查詢",
+ "tool.carrier":"承運人",
+ "dim.carrier":"承運人",
+ "dim.underCube":"USPS 僅於材積超過一立方英尺時採計材積重，本件以實秤重量計費。",
+ "dim.zoneNote":"採計材積重另須為第 5 區以上，援用本數值前請先確認目的地分區。",
+ "dim.overCap":"已超過該承運人受理之重量上限 {n} 磅。",
+ "sur.ovr":"超尺寸費用","sur.ovrOk":"未達超尺寸認定標準。",
+ "sur.ovrHit":"認定為超尺寸貨件。",
+ "sur.unau":"不受理貨件","sur.unauOk":"在受理上限範圍內。",
+ "sur.unauHit":"已超過受理上限，貨件可能遭拒收或加收費用。",
+ "sur.ns22":"非標準尺寸 \u2014 逾 22 吋","sur.ns22Ok":"最長邊未逾 22 吋。",
+ "sur.ns22Hit":"最長邊已逾 22 吋。",
+ "sur.ns30":"非標準尺寸 \u2014 逾 30 吋","sur.ns30Ok":"最長邊未逾 30 吋。",
+ "sur.ns30Hit":"最長邊已逾 30 吋。",
+ "sur.cube":"非標準材積 \u2014 逾 2 立方英尺","sur.cubeOk":"材積未逾 2 立方英尺。",
+ "sur.cubeHit":"材積已逾 2 立方英尺。",
+ "sur.umax":"受理上限","sur.umaxOk":"在受理上限範圍內。",
+ "sur.umaxHit":"已逾 70 磅或長加圍長 130 吋。",
+ "sur.floorOvr":"超尺寸費用適用最低計費重量。",
+ "nav.parcelcalc":"快遞試算","nav.oceanvol":"海運材積",
  "unit.imp":"英吋／磅","unit.met":"公分／公斤",
  "f.len":"長","f.wid":"寬","f.hei":"高","f.actual":"實秤重量","f.div":"材積除數",
  "f.divCustom":"自行輸入","f.divOwn":"除數數值","f.actualLb":"實秤重量（磅）",
@@ -1987,7 +2123,7 @@ zh:{
  "f.pages":"網站導覽",
  "f.note":"試算結果為規劃用途之估算值。實際計費以貴公司合約條款及承運人核算後之帳單為準。",
  "dim.h":"計費重量之判定",
- "dim.p":"快遞業者以實秤重量與材積重量之較大者計費。",
+ "dim.p":"快遞業者以實秤重量與材積重量之較大者計費。材積除數及其適用條件依承運人而異。",
  "dim.hint":"材積除數依貴公司之承運人合約而定。援用本結果前，請先確認適用數值。",
  "dim.outH":"計算結果","dim.vol":"材積","dim.dimw":"材積重量","dim.scale":"實秤重量",
  "dim.bill":"計費重量",
@@ -2005,7 +2141,7 @@ zh:{
  "cbm.enter":"請新增箱型後計算。",
  "cbm.dense":"重量高於材積，本批貨物以重量噸計費。",
  "sur.h":"附加費風險檢核",
- "sur.p":"請以英吋填入尺寸、以磅填入重量。系統將與美國陸運公告門檻比對。",
+ "sur.p":"請以英吋填入尺寸、以磅填入重量。系統將與所選承運人公告之美國陸運門檻比對。",
  "sur.hint":"門檻採用承運人公告之美國陸運數值，並定期調整。包材類額外處理費與超限費取決於轉運中心實際量測結果，本檢核僅供初步判斷。",
  "sur.outH":"門檻檢核","sur.girth":"圍長","sur.lg":"長加圍長",
  "sur.longest":"最長邊","sur.second":"次長邊",
@@ -2268,17 +2404,41 @@ function renderFaq(){
     if(!b || !bar.contains(b)) return;
     Array.prototype.forEach.call(bar.children, function(x){ x.classList.remove("on"); });
     b.classList.add("on");
-    document.querySelectorAll("#tools .panel").forEach(function(p){
-      p.classList.toggle("on", p.id === b.getAttribute("data-panel"));
+    var want = b.getAttribute("data-panel");
+    document.querySelectorAll("#toolBox .panel").forEach(function(p){
+      p.classList.toggle("on", p.id === want);
     });
+    syncCarrierBar(want);
   });
 })();
 
-/* ---------- 7a. 計費重量 ---------- */
+/* ---------- 7a. 承運人 ---------- */
+var CARRIER = "ups";
+var CARRIER_PANELS = { "p-dim":1, "p-sur":1 };   /* 只有這兩頁依承運人而異 */
+function carrierRules(){ return RULES.carrier[CARRIER] || RULES.carrier.ups; }
+function syncCarrierBar(panelId){
+  var wrap = $("calCarWrap"); if(!wrap) return;
+  wrap.classList.toggle("off", !CARRIER_PANELS[panelId]);
+}
+(function wireCarrierBar(){
+  var bar = $("calCar"); if(!bar) return;
+  bar.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if(!b || !bar.contains(b)) return;
+    Array.prototype.forEach.call(bar.children, function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    CARRIER = b.getAttribute("data-k");
+    buildDivisorOptions(true); calcDim(); calcSur();
+  });
+})();
+
+/* ---------- 7b. 計費重量 ---------- */
 var dimUnit = "imp";
-function buildDivisorOptions(){
+/* reset=true 時強制回到該承運人的預設除數。換承運人卻沿用上一家的數字
+   （例如 USPS 保留 139）會看不出差別，所以切換時一律重設。 */
+function buildDivisorOptions(reset){
   var sel = $("dDiv"); if(!sel) return;
-  var keep = sel.value, list = RULES.divisors[dimUnit];
+  var keep = reset ? "" : sel.value, list = carrierRules().divisors[dimUnit];
   sel.innerHTML = list.map(function(v){ return '<option value="' + v + '">' + v + '</option>'; }).join("")
     + '<option value="0">' + esc(T("f.divCustom")) + '</option>';
   sel.value = (keep === "0" || list.indexOf(parseFloat(keep)) >= 0) ? keep : String(list[0]);
@@ -2297,14 +2457,30 @@ function calcDim(){
   var imp = (dimUnit === "imp");
   var uL = imp ? "in" : "cm", uW = imp ? "lb" : "kg", step = imp ? 1 : 0.5;
   var vol = L * W * H, dimW = vol / div;
-  var bill = ceilTo(Math.max(A, dimW), step);
-  var verdict = (Math.abs(dimW - A) < 0.05) ? "dim.tie" : (dimW > A ? "dim.byDim" : "dim.byScale");
+  var C = carrierRules();
+  /* 材積下限一律換算成立方英吋再比，公制輸入也適用同一條規則。 */
+  var volIn3 = imp ? vol : vol / 16.387064;
+  var dimApplies = !(C.dimMinVolumeIn3 > 0 && volIn3 <= C.dimMinVolumeIn3);
+  var effDim = dimApplies ? dimW : 0;
+  var bill = ceilTo(Math.max(A, effDim), step);
+  var capLb = imp ? A : A * 2.20462;
+  var notes = [];
+  var verdict;
+  if(!dimApplies){ verdict = "dim.underCube"; }
+  else if(Math.abs(dimW - A) < 0.05){ verdict = "dim.tie"; }
+  else { verdict = (dimW > A) ? "dim.byDim" : "dim.byScale"; }
+  notes.push(T(verdict));
+  if(dimApplies && C.dimZoneNote) notes.push(T("dim.zoneNote"));
+  if(C.maxWeightLb && capLb > C.maxWeightLb)
+    notes.push(T("dim.overCap").replace("{n}", fmt(C.maxWeightLb, 0)));
   box.innerHTML =
-      '<div class="line"><i>' + esc(T("dim.vol")) + '</i><b>' + fmt(vol, 0) + " " + uL + '&sup3;</b></div>'
-    + '<div class="line"><i>' + esc(T("dim.dimw")) + ' &divide; ' + fmt(div, 0) + '</i><b>' + fmt(dimW, 1) + " " + uW + '</b></div>'
+      '<div class="line"><i>' + esc(T("dim.carrier")) + '</i><b>' + esc(RULES.carrierName[CARRIER]) + '</b></div>'
+    + '<div class="line"><i>' + esc(T("dim.vol")) + '</i><b>' + fmt(vol, 0) + " " + uL + '&sup3;</b></div>'
+    + '<div class="line"><i>' + esc(T("dim.dimw")) + ' &divide; ' + fmt(div, 0) + '</i><b>'
+    +   (dimApplies ? fmt(dimW, 1) + " " + uW : "&mdash;") + '</b></div>'
     + '<div class="line"><i>' + esc(T("dim.scale")) + '</i><b>' + fmt(A, 1) + " " + uW + '</b></div>'
     + '<div class="line big"><i>' + esc(T("dim.bill")) + '</i><b>' + fmt(bill, imp ? 0 : 1) + " " + uW + '</b></div>'
-    + '<p class="hint">' + esc(T(verdict)) + '</p>';
+    + '<p class="hint">' + esc(notes.join(" ")) + '</p>';
 }
 (function wireDim(){
   $("dimUnit").addEventListener("click", function(e){
@@ -2396,44 +2572,48 @@ function calcCbm(){
 })();
 
 /* ---------- 7c. 附加費預檢 ---------- */
+/* 檢核項目由 RULES.carrier[CARRIER].checks 決定，三家的項目名稱與門檻都不同，
+   這支函式只負責比對與排版，不含任何寫死的數值。 */
 function calcSur(){
   var out = $("surOut"), meas = $("surMeasure"); if(!out) return;
   var L = numOf("sL"), W = numOf("sW"), H = numOf("sH"), A = numOf("sA");
   if(!(L > 0 && W > 0 && H > 0 && A >= 0)){
     meas.innerHTML = ""; out.innerHTML = '<p class="hint">' + esc(T("dim.enter")) + '</p>'; return;
   }
-  var p = RULES.parcel;
-  var s = [L, W, H].sort(function(a, b){ return b - a; });
-  var girth = 2 * (s[1] + s[2]), lg = s[0] + girth;
+  var C = carrierRules();
+  var s3 = [L, W, H].sort(function(a, b){ return b - a; });
+  var girth = 2 * (s3[1] + s3[2]), lg = s3[0] + girth, vol = L * W * H;
+  var m = { longest:s3[0], second:s3[1], lenGirth:lg, weight:A, volume:vol };
 
   meas.innerHTML =
-      '<div class="line"><i>' + esc(T("sur.longest")) + '</i><b>' + fmt(s[0], 1) + ' in</b></div>'
-    + '<div class="line"><i>' + esc(T("sur.second")) + '</i><b>' + fmt(s[1], 1) + ' in</b></div>'
-    + '<div class="line"><i>' + esc(T("sur.girth")) + ' 2 &times; (' + fmt(s[1],1) + ' + ' + fmt(s[2],1) + ')</i><b>' + fmt(girth, 1) + ' in</b></div>'
-    + '<div class="line"><i>' + esc(T("sur.lg")) + '</i><b>' + fmt(lg, 1) + ' in</b></div>';
+      '<div class="line"><i>' + esc(T("sur.longest")) + '</i><b>' + fmt(s3[0], 1) + ' in</b></div>'
+    + '<div class="line"><i>' + esc(T("sur.second")) + '</i><b>' + fmt(s3[1], 1) + ' in</b></div>'
+    + '<div class="line"><i>' + esc(T("sur.girth")) + ' 2 &times; (' + fmt(s3[1],1) + ' + ' + fmt(s3[2],1) + ')</i><b>' + fmt(girth, 1) + ' in</b></div>'
+    + '<div class="line"><i>' + esc(T("sur.lg")) + '</i><b>' + fmt(lg, 1) + ' in</b></div>'
+    + '<div class="line"><i>' + esc(T("dim.vol")) + '</i><b>' + fmt(vol, 0) + ' in&sup3;</b></div>';
 
-  var ahw = A > p.ahWeightLb;
-  var ahd = (s[0] > p.ahLongestIn) || (s[1] > p.ahSecondIn) || (lg > p.ahLenGirthIn);
-  var lp  = (lg > p.lpLenGirthIn) || (s[0] > p.lpLongestIn);
-  var om  = (A > p.omWeightLb) || (s[0] > p.omLongestIn) || (lg > p.omLenGirthIn);
+  var anyHit = false, floorLb = 0, floorMsg = "";
+  var rows = C.checks.map(function(c){
+    var hit = false;
+    for(var k in c.limits){ if(m[k] !== undefined && m[k] > c.limits[k]) hit = true; }
+    if(hit){
+      anyHit = true;
+      if(c.floorLb && c.floorLb > floorLb){ floorLb = c.floorLb; floorMsg = c.floorMsg || ""; }
+    }
+    return '<div class="flag ' + (hit ? "hit" : "clear") + '"><em>' + esc(c.code) + '</em><div>'
+      + '<b>' + esc(T("sur." + c.key)) + '</b>'
+      + '<span>' + esc(T("sur." + c.key + (hit ? "Hit" : "Ok"))) + '</span></div></div>';
+  }).join("");
 
-  function flag(code, hit, titleKey, okKey, hitKey){
-    return '<div class="flag ' + (hit ? "hit" : "clear") + '"><em>' + code + '</em><div>'
-      + '<b>' + esc(T(titleKey)) + '</b><span>' + esc(hit ? T(hitKey) : T(okKey)) + '</span></div></div>';
-  }
-  var floorLb = lp ? p.floorLpLb : (ahd ? p.floorAhDimLb : 0);
-  var floorNote = lp ? T("sur.floorLp") : (ahd ? T("sur.floorAh") : T("sur.floorNone"));
   var bill = Math.max(Math.ceil(A), floorLb);
-
   out.innerHTML =
-      flag("AH-W", ahw, "sur.ahw", "sur.ahwOk", "sur.ahwHit")
-    + flag("AH-D", ahd, "sur.ahd", "sur.ahdOk", "sur.ahdHit")
-    + flag("LPS",  lp,  "sur.lp",  "sur.lpOk",  "sur.lpHit")
-    + flag("MAX",  om,  "sur.om",  "sur.omOk",  "sur.omHit")
+      '<div class="line" style="margin-bottom:14px"><i>' + esc(T("dim.carrier")) + '</i><b>'
+    +   esc(RULES.carrierName[CARRIER]) + '</b></div>'
+    + rows
     + '<div class="line" style="margin-top:12px"><i>' + esc(T("sur.floor")) + '</i><b>'
     +   (floorLb ? fmt(floorLb, 0) + " lb" : "&mdash;") + '</b></div>'
     + '<div class="line big"><i>' + esc(T("sur.bill")) + '</i><b>' + fmt(bill, 0) + ' lb</b></div>'
-    + '<p class="hint">' + esc((ahw || ahd || lp || om) ? floorNote : T("sur.clean")) + '</p>';
+    + '<p class="hint">' + esc(anyHit ? (floorMsg ? T(floorMsg) : T("sur.floorNone")) : T("sur.clean")) + '</p>';
 }
 ["sL","sW","sH","sA"].forEach(function(id){ $(id).addEventListener("input", calcSur); });
 
@@ -2854,31 +3034,37 @@ brokerage:{
  ]},
 
 promotions:{
- kicker:L("Current programmes","現行方案"),
+ kicker:L("Rate programmes","費率方案"),
  title:L("Promotions","優惠方案"),
- lead:L("Rate programmes currently open to new and existing accounts. Terms are confirmed in writing at quotation; the summaries below are indicative.",
-        "現階段開放新舊客戶申請之費率方案。實際條件以報價書面確認為準，以下僅為方案摘要。"),
+ lead:L("Geniqua holds negotiated rates on both the ocean and the parcel side. The programmes below are drawn from our standing service contracts; the figures applicable to your account are confirmed in writing at quotation.",
+        "Geniqua 於海運與快遞兩端均持有議定費率。以下方案來自本公司既有之服務合約，適用於貴公司之實際數字，於報價時以書面確認。"),
  blocks:[
-  {type:"promo", h:L("Open programmes","開放中之方案"), items:[
-    {t:L("New account onboarding","新客戶導入方案"),
-     d:L("Receiving and system integration handled at no set-up charge for accounts committing to a twelve month term.",
-         "承諾合作滿十二個月之客戶，進倉建檔與系統介接不另收建置費用。"),
-     tag:L("Onboarding","導入")},
-    {t:L("Peak season storage","旺季倉儲方案"),
-     d:L("Pallet positions reserved ahead of the third quarter build-up, with the rate fixed for the duration of the peak.",
-         "於第三季備貨潮前預留板位，並於旺季期間鎖定費率。"),
-     tag:L("Storage","倉儲")},
-    {t:L("FBA transfer programme","FBA 轉運方案"),
-     d:L("Consolidated transfers into Amazon fulfillment centres on a fixed weekly schedule, priced per carton.",
-         "依固定週班次併裝送交亞馬遜物流中心，以每箱計價。"),
+  {type:"promo", h:L("Where the savings come from","費率來源"), items:[
+    {t:L("FedEx and UPS discounted rates","FedEx 與 UPS 折扣費率"),
+     d:L("Parcel rates negotiated at Geniqua volume are extended to fulfillment accounts, so a start-up ships on the same rate card as a large corporation.",
+         "以 Geniqua 整體量體議定之快遞費率，開放代發貨客戶適用；新創企業與大型企業使用同一份費率表。"),
+     tag:L("Parcel","快遞")},
+    {t:L("Direct service contracts with all major ocean carriers","與各主要船公司之直簽服務合約"),
+     d:L("Contracted space across a multitude of sailing and service strings, which keeps scheduling flexible when a vessel rolls or a deadline moves.",
+         "於多條航線與班次上持有約定艙位；遇甩櫃或交期變動時，排程仍保有調整空間。"),
+     tag:L("Ocean","海運")},
+    {t:L("Fulfillment services that adapt to changing volume","可隨量體調整之代發貨服務"),
+     d:L("Receiving, storage, pick and pack and outbound freight are quoted as separate lines, so the rate follows the profile rather than a fixed package.",
+         "進倉、倉租、揀貨包裝與出貨運費分項報價，費率隨貨況調整，不綁定固定套組。"),
      tag:L("Fulfillment","代發貨")}
   ]},
-  {type:"intro", h:L("How to apply","申請方式"),
-   p:L("Programmes are subject to space and equipment availability and may be withdrawn without notice. To apply, send your monthly volume, the service line concerned and your intended start date; we will confirm eligibility and issue a written quotation. Existing accounts should raise the request with their assigned representative.",
-       "各方案依倉容與設備狀況提供，得不經預告調整或終止。申請時請提供每月數量、所需服務線別及預計開始日期，本公司將確認適用資格並出具書面報價。既有客戶請逕洽專責業務代表。")},
-  {type:"cta", h:L("Apply for a programme","申請方案"),
-   p:L("Send the details and your representative will confirm availability and issue terms.",
-       "請提供相關資料，由專責代表確認名額並回覆條件。"),
+  {type:"table", h:L("What is quoted separately","分項報價內容"), rows:[
+    [L("Ocean freight","海運運費"), L("Port pair, FCL or LCL, with drayage and trans-loading priced as separate legs","港對港，整櫃或併櫃；拖車與轉裝作業另列計價")],
+    [L("Receiving and storage","進倉與倉租"), L("Pallet position or cubic foot, billed monthly against actual occupancy","按板位或材積計算，依實際佔用按月結算")],
+    [L("Pick, pack and value added","揀貨、包裝與加值服務"), L("Per order and per unit, with kitting, labeling and inserts quoted by operation","按訂單與件數計價；組裝、貼標與附件置入依作業別報價")],
+    [L("Outbound parcel and LTL","快遞與零擔出貨"), L("On the Geniqua rate card, or on your own carrier account where preferred","適用 Geniqua 費率表，亦可指定使用貴公司自有承運人帳號")]
+  ]},
+  {type:"intro", h:L("Requesting current terms","索取現行條件"),
+   p:L("Programmes are subject to space and equipment availability and are reviewed periodically. To obtain the terms applicable to your account, send the monthly volume, the service lines concerned and the intended start date. Existing accounts should raise the request with their assigned representative.",
+       "各方案依倉容與設備狀況提供，並定期檢討。如需取得適用於貴公司之條件，請提供每月數量、所需服務線別及預計開始日期。既有客戶請逕洽專責客戶經理。")},
+  {type:"cta", h:L("Request current rates","索取現行費率"),
+   p:L("Send the profile and your representative will confirm availability and issue a written quotation.",
+       "請提供貨況概要，由專責客戶經理確認名額並出具書面報價。"),
    href:"#/contact", label:L("Contact us","聯絡我們")}
  ]},
 
@@ -2896,13 +3082,20 @@ PAGES.calculators = {
         "客戶詢問頻率最高之五項計算。所有運算於瀏覽器端執行，不傳送任何資料。")
 };
 
+PAGES.oceanvolume = {
+ kicker:L("Planning tools","規劃工具"),
+ title:L("Ocean volume","海運材積試算"),
+ lead:L("Cubic measurement, gross weight, chargeable revenue tons and container utilisation, calculated from your carton specification. Ocean freight is not carrier rated in the parcel sense, so this calculation is kept separate from the parcel tools.",
+        "依外箱規格計算材積、總毛重、計費噸與貨櫃裝載率。海運計費方式與快遞不同，故本試算獨立於快遞工具之外。")
+};
+
 
 /* =====================================================================
    分頁路由。每個項目是獨立的一頁，網址寫在 hash 裡，
    上一頁／下一頁與直接貼網址都會回到正確的分頁。
    ===================================================================== */
 var ROUTES = ["home","mission","services","ocean","inland","warehouse","ecommerce",
-              "brokerage","calculators","promotions","contact"];
+              "brokerage","calculators","oceanvolume","promotions","contact"];
 var PAGE_TITLE = {
   home:      L("Home","首頁"),
   mission:   L("Our Mission","經營理念"),
@@ -2912,7 +3105,8 @@ var PAGE_TITLE = {
   warehouse: L("Warehousing & Distribution","倉儲與配送"),
   ecommerce: L("E-Commerce Order Fulfillment","電商訂單代發貨"),
   brokerage: L("Customs Brokerage","報關服務"),
-  calculators:L("Calculators","試算工具"),
+  calculators:L("Parcel Calculators","快遞試算"),
+  oceanvolume:L("Ocean Volume","海運材積試算"),
   promotions:L("Promotions","優惠方案"),
   contact:   L("Contact Us","聯絡我們")
 };
