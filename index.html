@@ -317,6 +317,8 @@ h2.sec{font-size:clamp(27px,3.2vw,38px);max-width:20ch}
 .carrierBar button.c-fedex.on{background:var(--fedex);box-shadow:inset 0 -3px 0 var(--fedex-orange)}
 .carrierBar button.c-usps.on{background:var(--usps);box-shadow:inset 0 -3px 0 var(--usps-red)}
 
+#palSvg{display:block;max-width:430px;margin:14px auto 0}
+
 /* ---------- FAQ ---------- */
 details.faq{border-bottom:1px solid var(--line)}
 details.faq summary{list-style:none;cursor:pointer;padding:20px 44px 20px 0;font-family:var(--display);
@@ -1574,7 +1576,7 @@ footer .wrap > div{flex:1 1 220px}
         <div class="out">
           <h4 data-i18n="pal.outH">Result</h4>
           <div id="palOut"></div>
-          <svg id="palSvg" viewBox="0 0 240 200" style="margin-top:14px;width:100%;height:auto" role="img" aria-label="Top view of one pallet layer"></svg>
+          <svg id="palSvg" viewBox="0 0 300 264" style="margin-top:14px;width:100%;height:auto" role="img" aria-label="Top view of one pallet layer"></svg>
         </div>
       </div>
     </div>
@@ -2016,6 +2018,9 @@ en:{
  "pal.tooTall":"The carton exceeds the stack height limit. Increase the limit or ship floor-loaded.",
  "pal.heavy":"Gross weight exceeds the customary limit per pallet; double stacking is unlikely to be accepted.",
  "pal.diagram":"Single layer, plan view",
+ "pal.orientA":"Carton length runs along the 48 in face.",
+ "pal.orientB":"Carton rotated 90 degrees; the width runs along the 48 in face.",
+ "pal.unused":"Unused deck",
  "trk.h":"Shipment tracking",
  "trk.p":"Parcel tracking numbers and ISO 6346 container numbers are both accepted. Container numbers are validated against their check digit before a reference is returned.",
  "trk.f":"Tracking or container number",
@@ -2167,6 +2172,9 @@ zh:{
  "pal.tooTall":"該外箱高度已超過堆疊上限。請調高上限或改採散裝方式出貨。",
  "pal.heavy":"每板毛重已超過一般容許值，雙層堆疊恐不予受理。",
  "pal.diagram":"單層排列俯視圖",
+ "pal.orientA":"外箱長邊沿 48 吋方向排列。",
+ "pal.orientB":"外箱旋轉 90 度，寬邊沿 48 吋方向排列。",
+ "pal.unused":"未使用檯面",
  "trk.h":"貨況查詢",
  "trk.p":"支援快遞單號與 ISO 6346 貨櫃號。貨櫃號將先驗證檢查碼，通過後始提供查詢連結。",
  "trk.f":"追蹤號碼或貨櫃號",
@@ -2653,23 +2661,78 @@ function calcPal(){
     + '<p class="hint">' + esc(T("pal.last")) + ": " + commas(lastCount) + " / " + commas(perPallet)
     +   " (" + esc(lastCount === perPallet ? T("pal.full") : T("pal.partial")) + ")"
     +   (netLb > p.maxNetLb ? " &middot; " + esc(T("pal.heavy")) : "") + '</p>'
-    + '<p class="hint" style="margin-top:4px"><b>' + esc(T("pal.diagram")) + '</b></p>';
+    + '<p class="hint" style="margin-top:4px"><b>' + esc(T("pal.diagram")) + '</b> &middot; '
+    +   esc(useA ? T("pal.orientA") : T("pal.orientB")) + ' ' + esc(T("pal.unused")) + ': '
+    +   String(Math.round((p.lenIn - (useA ? colsA * L : colsB * W)) * 10) / 10) + ' &times; '
+    +   String(Math.round((p.widIn - (useA ? rowsA * W : rowsB * L)) * 10) / 10) + ' in</p>';
 
-  /* 由上往下看的排列圖：棧板 48 × 40，等比縮到 viewBox */
+  /* 俯視排列圖。原本只畫格子，看不出棧板本身在哪、也看不出還剩多少檯面；
+     改成畫出美規棧板的檯面板條，未使用的區域打斜線，兩側加尺寸線。
+     用色一律走站內變數，不要再出現舊色票的亮橘描邊。 */
   var cols = useA ? colsA : colsB, rows = useA ? rowsA : rowsB;
   var cw = useA ? L : W, ch = useA ? W : L;
-  var sc = Math.min((240 - 26) / p.lenIn, (200 - 26) / p.widIn);
-  var px = (240 - p.lenIn * sc) / 2, py = (200 - p.widIn * sc) / 2;
-  var parts = ['<rect x="' + px + '" y="' + py + '" width="' + (p.lenIn * sc) + '" height="' + (p.widIn * sc)
-    + '" rx="4" fill="#D9C0A1" stroke="#8A7A62" stroke-width="2.4"/>'];
+  var VW = 300, VH = 264, ML = 38, MR = 16, MT = 28, MB = 34;
+  var sc = Math.min((VW - ML - MR) / p.lenIn, (VH - MT - MB) / p.widIn);
+  var pw = p.lenIn * sc, ph = p.widIn * sc;
+  var px = ML + ((VW - ML - MR) - pw) / 2, py = MT + ((VH - MT - MB) - ph) / 2;
+  var uw = cols * cw * sc, uh = rows * ch * sc;
+  function n1(v){ return String(Math.round(v * 10) / 10).replace(/\.0$/, ""); }
+  var g = [];
+
+  g.push('<defs><pattern id="palHatch" width="6" height="6" patternUnits="userSpaceOnUse" '
+       + 'patternTransform="rotate(45)"><rect width="6" height="6" fill="#F0EAE0"/>'
+       + '<path d="M0 0v6" stroke="#D3C8B7" stroke-width="1.4"/></pattern></defs>');
+
+  /* 棧板檯面：七片板條，跟實際的美規棧板一致 */
+  g.push('<rect x="' + px + '" y="' + py + '" width="' + pw + '" height="' + ph
+       + '" rx="2" fill="#C4BAA6"/>');
+  var boards = 7, bw = pw / boards;
+  for(var i = 0; i < boards; i++){
+    g.push('<rect x="' + (px + i * bw + 1.1) + '" y="' + (py + 1.6) + '" width="' + (bw - 2.2)
+         + '" height="' + (ph - 3.2) + '" rx="1.4" fill="#DBD2C0" stroke="#B4AA96" stroke-width=".8"/>');
+  }
+
+  /* 沒放到箱子的檯面：右側與下側兩條 */
+  if(pw - uw > 0.5)
+    g.push('<rect x="' + (px + uw) + '" y="' + py + '" width="' + (pw - uw) + '" height="' + ph
+         + '" fill="url(#palHatch)" opacity=".85"/>');
+  if(ph - uh > 0.5)
+    g.push('<rect x="' + px + '" y="' + (py + uh) + '" width="' + uw + '" height="' + (ph - uh)
+         + '" fill="url(#palHatch)" opacity=".85"/>');
+
+  /* 外箱 */
   for(var r = 0; r < rows; r++){
     for(var c = 0; c < cols; c++){
-      parts.push('<rect x="' + (px + c * cw * sc + 1) + '" y="' + (py + r * ch * sc + 1)
-        + '" width="' + (cw * sc - 2) + '" height="' + (ch * sc - 2)
-        + '" rx="2" fill="#E7BA70" stroke="#E0531F" stroke-width="1.6"/>');
+      var bx = px + c * cw * sc, by = py + r * ch * sc;
+      g.push('<rect x="' + (bx + 1.6) + '" y="' + (by + 2.2) + '" width="' + (cw * sc - 2)
+           + '" height="' + (ch * sc - 2) + '" rx="1.5" fill="#1E1D1B" opacity=".13"/>');
+      g.push('<rect x="' + (bx + 0.9) + '" y="' + (by + 0.9) + '" width="' + (cw * sc - 1.8)
+           + '" height="' + (ch * sc - 1.8) + '" rx="1.5" fill="#E0BA86" stroke="#A8763F" stroke-width="1"/>');
+      g.push('<path d="M' + (bx + cw * sc / 2) + ' ' + (by + 2.6) + 'v' + (ch * sc - 5.2)
+           + '" stroke="#C39457" stroke-width=".9" opacity=".8"/>');
     }
   }
-  svg.innerHTML = parts.join("");
+  g.push('<rect x="' + px + '" y="' + py + '" width="' + uw + '" height="' + uh
+       + '" fill="none" stroke="#E0531F" stroke-width="1.4" stroke-dasharray="4 3"/>');
+
+  /* 尺寸線 */
+  var dy = py - 13, dx = px - 15;
+  g.push('<g stroke="#A79C90" stroke-width="1" fill="none">'
+       + '<path d="M' + px + ' ' + dy + 'h' + pw + 'M' + px + ' ' + (dy - 4) + 'v8M'
+       + (px + pw) + ' ' + (dy - 4) + 'v8"/>'
+       + '<path d="M' + dx + ' ' + py + 'v' + ph + 'M' + (dx - 4) + ' ' + py + 'h8M'
+       + (dx - 4) + ' ' + (py + ph) + 'h8"/></g>');
+  g.push('<rect x="' + (px + pw / 2 - 22) + '" y="' + (dy - 7) + '" width="44" height="14" fill="#FFFFFF"/>');
+  g.push('<text x="' + (px + pw / 2) + '" y="' + (dy + 4) + '" text-anchor="middle" fill="#6E665C" '
+       + 'font-family="ui-monospace,Menlo,monospace" font-size="10">' + n1(p.lenIn) + ' in</text>');
+  g.push('<text x="' + dx + '" y="' + (py + ph / 2) + '" text-anchor="middle" fill="#6E665C" '
+       + 'font-family="ui-monospace,Menlo,monospace" font-size="10" '
+       + 'transform="rotate(-90 ' + dx + ' ' + (py + ph / 2) + ')">' + n1(p.widIn) + ' in</text>');
+  g.push('<text x="' + (px + cw * sc / 2) + '" y="' + (py + ch * sc / 2 + 3.5)
+       + '" text-anchor="middle" fill="#8A6335" font-family="ui-monospace,Menlo,monospace" '
+       + 'font-size="9">' + n1(cw) + '\u00d7' + n1(ch) + '</text>');
+
+  svg.innerHTML = g.join("");
 }
 ["pL","pW","pH","pQ","pKg","pMax"].forEach(function(id){ $(id).addEventListener("input", calcPal); });
 
